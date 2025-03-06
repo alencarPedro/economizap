@@ -1,0 +1,53 @@
+{
+	"name": "economizap",
+	"version": "0.1.0",
+	"private": true,
+	"type": "commonjs",
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"build:bot": "tsc -p tsconfig.bot.json",
+		"start": "next start",
+		"start:bot": "node dist/server.js",
+		"start:bot:dev": "ts-node-dev --transpile-only src/server.ts",
+		"start:bot:alt": "node src/register.js",
+		"start:bot:nodemon": "nodemon --exec ts-node src/server.ts",
+		"start:bot:simple": "node --require ts-node/register src/server.ts",
+		"start:bot:esm": "node --loader ts-node/esm src/server.ts",
+		"start:bot:tsx": "tsx src/server.ts",
+		"lint": "next lint"
+	},
+	"dependencies": {
+		"@stripe/stripe-js": "^5.8.0",
+		"@supabase/auth-helpers-nextjs": "^0.10.0",
+		"@supabase/supabase-js": "^2.49.1",
+		"autoprefixer": "^10.4.15",
+		"chart.js": "^4.4.8",
+		"date-fns": "^2.30.0",
+		"dotenv": "^16.4.7",
+		"next": "^14.2.24",
+		"openai": "^4.86.1",
+		"postcss": "^8.4.29",
+		"qrcode-terminal": "^0.12.0",
+		"react": "^18.3.1",
+		"react-chartjs-2": "^5.3.0",
+		"react-dom": "^18.3.1",
+		"react-native-dotenv": "^3.4.11",
+		"stripe": "^14.25.0",
+		"tailwindcss": "^3.3.3",
+		"typescript": "^5.2.2",
+		"whatsapp-web.js": "^1.26.0"
+	},
+	"devDependencies": {
+		"@types/node": "^20.17.23",
+		"@types/qrcode-terminal": "^0.12.2",
+		"@types/react": "^18.3.18",
+		"@types/react-dom": "^18.3.5",
+		"eslint": "^8.49.0",
+		"eslint-config-next": "^13.4.19",
+		"nodemon": "^3.1.9",
+		"ts-node": "^10.9.2",
+		"ts-node-dev": "^2.0.0",
+		"tsx": "^4.19.3"
+	}
+}

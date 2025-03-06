@@ -1,0 +1,79 @@
+First I will describe exactly what a i want, then we will make all this divided by sections and will attack one section at the time
+
+
+
+The main porpose of this bot is to organize my finances.
+
+How? 
+
+1) On a whatsapp chat, i want to send a [expense] [category] [amount] [type]
+But i want to make this more natural as possible, so we will use ai to understand what the user types and what he means with it, also make it work in any language, but mainly in Brazilian Portuguese
+
+Example: "Uber 20" 
+The bot must understand that is a transport method and register as a "Transport" category and also diplay the date the register is made
+Example: 
+"Gasto adicionado
+📌UBER (transporte)
+R$ 20,00
+03/03/2025"
+
+Also we will have budget limit per month for each category, so in this example if the budget for transport was 30.00 it should display also a notice message like this
+
+Example: 
+"Lembrete: Você está quase chegando no seu limite definido de R$30 por mês com Transporte."
+
+2) You can ask evryting about your finances
+
+Example: Lets say you want to see how much you have expend on the last few days:
+"Quanto eu gastei nos ultimos dias?
+
+The bot should return a image with a chart like the photo i sended you, that displays all the expensed for echa day of the current week and a text with the comparison of the previous week, saying like "Seus gastos aumentaram 20% essa semana"
+
+With that the user can ask "Com o que eu gastei a mais essa semana" and it will compare the expenses and say what was the different expense that the user made this week that he didnt on the last one
+
+The bot should reply like 
+"Os gastos aumentaram nesta semana em comparacao com a semana passada, totalizando R$100 a mais.
+O principal motivo foi a compra de gás de cozinha, realizada na segunda-feira(20/01), no valor de R$100, o que não ocorreu na semana anterior."
+
+3) You can define reminders of bills you have to pay and the bot will remember the user a fews days before the expire date
+Example: 
+"Parcela do carro todo dia 15, R$1500"
+
+the bot reply: 
+"Lembrete adicionado 
+📌Parcela do carro
+Data: 15
+Frequencia: Mensal"
+
+With that the bot will remember the user a few days earlier like this
+Example: 
+"💡Lembrete: Parcela do carro"
+
+The use can reply with:
+"paguei já"
+
+The bot replys:
+"Te lembro de novo mês que vem✅"
+
+5) You can define expensed limits per category, control how much you want to expend.
+Example:
+"como estao meu limites de gastos?"
+
+The bot replys with a image like the expenses_chat image
+that shows a progress bar like chart that display the percentages of expense/limit set for that category
+
+6) You can set goals for saving money for a trip for example.
+Example: 
+
+"Cria uma meta para viagem em setembro pro chile, preciso de 10mil
+ja guardei 2k hj"
+
+the bot replys:
+"Criei a meta e já registrei o valor que voce guardou hoje"
+and send the image like the goal_chart image on you context
+
+7) Beyond all that the AI needs to 
+
+- Create the categorys automaticly, identifying and organizing all the expensed alone
+- Smart suggestions, keep track of your expensed something like "you are expending to much in takeout this month, keep a eye on that"
+-Shopping analysis, you tell the AI what you want to buy, and the AI analises you profile and tells you if its best to pay with installments on credit card, wait to buy that on another month or to pay in cash.
