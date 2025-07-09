@@ -1,9 +1,20 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import React, { useState, useEffect, useMemo } from 'react';
+import dynamic from 'next/dynamic';
+import { getSupabaseClient } from '@/lib/supabase';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js';
-import { Pie, Bar } from 'react-chartjs-2';
+
+// Dynamically import charts to reduce initial bundle size
+const Pie = dynamic(() => import('react-chartjs-2').then((mod) => ({ default: mod.Pie })), {
+  loading: () => <div className="animate-pulse h-64 bg-gray-200 rounded" />,
+  ssr: false,
+});
+
+const Bar = dynamic(() => import('react-chartjs-2').then((mod) => ({ default: mod.Bar })), {
+  loading: () => <div className="animate-pulse h-64 bg-gray-200 rounded" />,
+  ssr: false,
+});
 import ExpenseCard from './ExpenseCard';
 import SavingsGoalCard from './SavingsGoalCard';
 
@@ -47,13 +58,47 @@ interface SavingsGoal {
 }
 
 export default function Dashboard() {
-	const supabase = createClientComponentClient();
+	const supabase = getSupabaseClient();
 	const [balance, setBalance] = useState<number>(0);
 	const [expenses, setExpenses] = useState<Expense[]>([]);
 	const [savingsGoals, setSavingsGoals] = useState<SavingsGoal[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
-	const [expensesByCategory, setExpensesByCategory] = useState<{ [key: string]: number }>({});
-	const [monthlyExpenses, setMonthlyExpenses] = useState<{ [key: string]: number }>({});
+	const [allExpenses, setAllExpenses] = useState<Expense[]>([]);
+
+	// Memoized calculations to prevent unnecessary re-computations
+	const expensesByCategory = useMemo(() => {
+		const byCategory: { [key: string]: number } = {};
+		allExpenses.forEach((expense) => {
+			if (!byCategory[expense.category]) {
+				byCategory[expense.category] = 0;
+			}
+			byCategory[expense.category] += expense.amount;
+		});
+		return byCategory;
+	}, [allExpenses]);
+
+	const monthlyExpenses = useMemo(() => {
+		const byMonth: { [key: string]: number } = {};
+		const today = new Date();
+
+		// Initialize last 6 months
+		for (let i = 0; i < 6; i++) {
+			const month = new Date(today.getFullYear(), today.getMonth() - i, 1);
+			const monthKey = month.toLocaleString('pt-BR', { month: 'short', year: 'numeric' });
+			byMonth[monthKey] = 0;
+		}
+
+		allExpenses.forEach((expense) => {
+			const expenseDate = new Date(expense.created_at);
+			const monthKey = expenseDate.toLocaleString('pt-BR', { month: 'short', year: 'numeric' });
+
+			if (byMonth[monthKey] !== undefined) {
+				byMonth[monthKey] += expense.amount;
+			}
+		});
+
+		return byMonth;
+	}, [allExpenses]);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -103,44 +148,14 @@ export default function Dashboard() {
 					if (goalsError) throw goalsError;
 					setSavingsGoals(goalsData || []);
 
-					// Calculate expenses by category
-					const { data: allExpenses, error: allExpensesError } = await supabase
+					// Get all expenses for calculations
+					const { data: allExpensesData, error: allExpensesError } = await supabase
 						.from('expenses')
 						.select('*')
 						.eq('user_id', userData.id);
 
 					if (allExpensesError) throw allExpensesError;
-
-					// Group by category
-					const byCategory: { [key: string]: number } = {};
-					allExpenses?.forEach((expense: Expense) => {
-						if (!byCategory[expense.category]) {
-							byCategory[expense.category] = 0;
-						}
-						byCategory[expense.category] += expense.amount;
-					});
-					setExpensesByCategory(byCategory);
-
-					// Group by month (last 6 months)
-					const byMonth: { [key: string]: number } = {};
-					const today = new Date();
-
-					for (let i = 0; i < 6; i++) {
-						const month = new Date(today.getFullYear(), today.getMonth() - i, 1);
-						const monthKey = month.toLocaleString('pt-BR', { month: 'short', year: 'numeric' });
-						byMonth[monthKey] = 0;
-					}
-
-					allExpenses?.forEach((expense: Expense) => {
-						const expenseDate = new Date(expense.created_at);
-						const monthKey = expenseDate.toLocaleString('pt-BR', { month: 'short', year: 'numeric' });
-
-						if (byMonth[monthKey] !== undefined) {
-							byMonth[monthKey] += expense.amount;
-						}
-					});
-
-					setMonthlyExpenses(byMonth);
+					setAllExpenses(allExpensesData || []);
 				}
 			} catch (error) {
 				console.error('Error fetching dashboard data:', error);

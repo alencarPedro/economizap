@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { getSupabaseClient } from '@/lib/supabase';
 
 interface AddSavingsGoalFormProps {
 	onSuccess?: () => void;
 }
 
 export default function AddSavingsGoalForm({ onSuccess }: AddSavingsGoalFormProps) {
-	const supabase = createClientComponentClient();
+	const supabase = getSupabaseClient();
 	const [name, setName] = useState('');
 	const [targetAmount, setTargetAmount] = useState('');
 	const [targetDate, setTargetDate] = useState('');

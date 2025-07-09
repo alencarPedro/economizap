@@ -6,8 +6,8 @@ export const metadata = {
 	description: 'Gerencie suas finanças pessoais com o EconomiZap',
 };
 
-import DashboardClient from '@/components/DashboardClient';
+import Dashboard from '@/components/Dashboard';
 
 export default function DashboardPage() {
-	return <DashboardClient />;
+	return <Dashboard />;
 }

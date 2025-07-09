@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { getSupabaseClient } from '@/lib/supabase';
 import { loadStripe } from '@stripe/stripe-js';
 
 // Initialize Stripe
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export default function ManageSubscription() {
-	const supabase = createClientComponentClient();
+	const supabase = getSupabaseClient();
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState('');
 	const [subscription, setSubscription] = useState<any>(null);

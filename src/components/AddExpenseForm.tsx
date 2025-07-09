@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { getSupabaseClient } from '@/lib/supabase';
 
 interface AddExpenseFormProps {
 	onSuccess?: () => void;
 }
 
 export default function AddExpenseForm({ onSuccess }: AddExpenseFormProps) {
-	const supabase = createClientComponentClient();
+	const supabase = getSupabaseClient();
 	const [description, setDescription] = useState('');
 	const [amount, setAmount] = useState('');
 	const [category, setCategory] = useState('');
